@@ -1,22 +1,17 @@
-// frontend/src/components/layout/AppLayout.jsx
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   AppShell, 
-  Navbar, 
-  Header, 
   Text, 
-  MediaQuery, 
-  Burger, 
   useMantineTheme,
   UnstyledButton,
   Group,
   Avatar,
   Menu,
-  ActionIcon,
+  Burger,
   Divider
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useAuth } from '../../context/AuthContext';
 
 // Icônes (vous pouvez les remplacer par des icônes spécifiques)
@@ -32,10 +27,11 @@ const AppLayout = ({ children }) => {
   const [opened, setOpened] = useState(false);
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const handleNavigation = (path) => {
     navigate(path);
-    setOpened(false); // Ferme le menu sur mobile
+    setOpened(false);
   };
 
   const handleLogout = () => {
@@ -45,163 +41,143 @@ const AppLayout = ({ children }) => {
 
   return (
     <AppShell
+      header={{ height: 70 }}
+      navbar={{ 
+        width: 250, 
+        breakpoint: 'sm', 
+        collapsed: { mobile: !opened } 
+      }}
       padding="md"
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}
-        >
-          <Navbar.Section grow>
-            <Text size="xl" weight={700} mb="lg">Agent Planning</Text>
-            
-            <UnstyledButton
-              sx={(theme) => ({
-                display: 'block',
-                width: '100%',
-                padding: theme.spacing.xs,
-                borderRadius: theme.radius.sm,
-                '&:hover': {
-                  backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-                },
-              })}
-              onClick={() => handleNavigation('/dashboard')}
-            >
-              <Group>
-                <DashboardIcon />
-                <Text>Tableau de bord</Text>
-              </Group>
-            </UnstyledButton>
-            
-            <UnstyledButton
-              sx={(theme) => ({
-                display: 'block',
-                width: '100%',
-                padding: theme.spacing.xs,
-                borderRadius: theme.radius.sm,
-                '&:hover': {
-                  backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-                },
-              })}
-              onClick={() => handleNavigation('/shifts')}
-            >
-              <Group>
-                <ShiftsIcon />
-                <Text>Mes créneaux</Text>
-              </Group>
-            </UnstyledButton>
-            
-            <UnstyledButton
-              sx={(theme) => ({
-                display: 'block',
-                width: '100%',
-                padding: theme.spacing.xs,
-                borderRadius: theme.radius.sm,
-                '&:hover': {
-                  backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-                },
-              })}
-              onClick={() => handleNavigation('/exchanges')}
-            >
-              <Group>
-                <ExchangeIcon />
-                <Text>Échanges</Text>
-              </Group>
-            </UnstyledButton>
-            
-            {currentUser?.is_admin && (
-              <UnstyledButton
-                sx={(theme) => ({
-                  display: 'block',
-                  width: '100%',
-                  padding: theme.spacing.xs,
-                  borderRadius: theme.radius.sm,
-                  '&:hover': {
-                    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-                  },
-                })}
-                onClick={() => handleNavigation('/admin')}
-              >
+    >
+      <AppShell.Header>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between', 
+          height: '100%',
+          padding: '0 15px'
+        }}>
+          {isMobile && (
+            <Burger
+              opened={opened}
+              onClick={() => setOpened((o) => !o)}
+              size="sm"
+              color={theme.colors.gray[6]}
+            />
+          )}
+
+          <Text size="lg" fw={700}>Agent Planning</Text>
+
+          <Menu>
+            <Menu.Target>
+              <UnstyledButton>
                 <Group>
-                  <AdminIcon />
-                  <Text>Administration</Text>
+                  <Avatar color="blue" radius="xl">
+                    {currentUser?.username?.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <div>
+                    <Text>{currentUser?.username}</Text>
+                    <Text size="xs" c="dimmed">
+                      {currentUser?.is_admin ? 'Administrateur' : 'Agent'}
+                    </Text>
+                  </div>
                 </Group>
               </UnstyledButton>
-            )}
-          </Navbar.Section>
+            </Menu.Target>
+            
+            <Menu.Dropdown>
+              <Menu.Item 
+                leftSection={<ProfileIcon />} 
+                onClick={() => handleNavigation('/profile')}
+              >
+                Mon profil
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item 
+                leftSection={<LogoutIcon />} 
+                onClick={handleLogout}
+              >
+                Déconnexion
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
+      </AppShell.Header>
+
+      <AppShell.Navbar p="md">
+        <AppShell.Section grow>
+          <Text size="xl" fw={700} mb="lg">Agent Planning</Text>
           
-          <Navbar.Section>
-            <Divider my="sm" />
+          <UnstyledButton
+            onClick={() => handleNavigation('/dashboard')}
+            p="xs"
+            style={{ width: '100%', borderRadius: theme.radius.sm }}
+            _hover={{ backgroundColor: theme.colors.gray[0] }}
+          >
+            <Group>
+              <DashboardIcon />
+              <Text>Tableau de bord</Text>
+            </Group>
+          </UnstyledButton>
+          
+          <UnstyledButton
+            onClick={() => handleNavigation('/shifts')}
+            p="xs"
+            style={{ width: '100%', borderRadius: theme.radius.sm }}
+            _hover={{ backgroundColor: theme.colors.gray[0] }}
+          >
+            <Group>
+              <ShiftsIcon />
+              <Text>Mes créneaux</Text>
+            </Group>
+          </UnstyledButton>
+          
+          <UnstyledButton
+            onClick={() => handleNavigation('/exchanges')}
+            p="xs"
+            style={{ width: '100%', borderRadius: theme.radius.sm }}
+            _hover={{ backgroundColor: theme.colors.gray[0] }}
+          >
+            <Group>
+              <ExchangeIcon />
+              <Text>Échanges</Text>
+            </Group>
+          </UnstyledButton>
+          
+          {currentUser?.is_admin && (
             <UnstyledButton
-              sx={(theme) => ({
-                display: 'block',
-                width: '100%',
-                padding: theme.spacing.xs,
-                borderRadius: theme.radius.sm,
-                '&:hover': {
-                  backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-                },
-              })}
-              onClick={handleLogout}
+              onClick={() => handleNavigation('/admin')}
+              p="xs"
+              style={{ width: '100%', borderRadius: theme.radius.sm }}
+              _hover={{ backgroundColor: theme.colors.gray[0] }}
             >
               <Group>
-                <LogoutIcon />
-                <Text>Déconnexion</Text>
+                <AdminIcon />
+                <Text>Administration</Text>
               </Group>
             </UnstyledButton>
-          </Navbar.Section>
-        </Navbar>
-      }
-      header={
-        <Header height={70} p="md">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-            <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-              />
-            </MediaQuery>
+          )}
+        </AppShell.Section>
+        
+        <AppShell.Section>
+          <Divider my="sm" />
+          <UnstyledButton
+            onClick={handleLogout}
+            p="xs"
+            style={{ width: '100%', borderRadius: theme.radius.sm }}
+            _hover={{ backgroundColor: theme.colors.gray[0] }}
+          >
+            <Group>
+              <LogoutIcon />
+              <Text>Déconnexion</Text>
+            </Group>
+          </UnstyledButton>
+        </AppShell.Section>
+      </AppShell.Navbar>
 
-            <Text size="lg" weight={700}>Agent Planning</Text>
-
-            <Menu>
-              <Menu.Target>
-                <UnstyledButton>
-                  <Group>
-                    <Avatar color="blue" radius="xl">{currentUser?.username?.charAt(0).toUpperCase()}</Avatar>
-                    <div>
-                      <Text>{currentUser?.username}</Text>
-                      <Text size="xs" color="dimmed">
-                        {currentUser?.is_admin ? 'Administrateur' : 'Agent'}
-                      </Text>
-                    </div>
-                  </Group>
-                </UnstyledButton>
-              </Menu.Target>
-              
-              <Menu.Dropdown>
-                <Menu.Item icon={<ProfileIcon />} onClick={() => handleNavigation('/profile')}>
-                  Mon profil
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item icon={<LogoutIcon />} onClick={handleLogout}>
-                  Déconnexion
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </div>
-        </Header>
-      }
-      styles={(theme) => ({
-        main: { 
-          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] 
-        },
-      })}
-    >
-      {children}
+      <AppShell.Main>
+        {children}
+      </AppShell.Main>
     </AppShell>
   );
 };

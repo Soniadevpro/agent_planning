@@ -1,5 +1,5 @@
 import axiosInstance from './axiosConfig';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const authService = {
   // Connexion utilisateur
@@ -52,7 +52,7 @@ const authService = {
     
     try {
       // Décoder le token pour vérifier s'il est expiré
-      const decoded = jwt_decode(token);
+      const decoded = jwtDecode(token);
       
       // Vérifier l'expiration du token (exp est en secondes)
       const currentTime = Date.now() / 1000;
@@ -69,7 +69,7 @@ const authService = {
     
     try {
       // Décoder le token pour obtenir les informations utilisateur
-      return jwt_decode(token);
+      return jwtDecode(token);
     } catch {
       return null;
     }
