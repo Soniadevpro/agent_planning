@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@mantine/core": "^7.17.3",
+    "@mantine/hooks": "^7.17.3",
+    "jwt-decode": "^4.0.0",
+    "react-router-dom": "^7.4.1"
+  }
+}
