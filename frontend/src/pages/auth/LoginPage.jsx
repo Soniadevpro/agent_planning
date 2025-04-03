@@ -8,11 +8,6 @@ import {
   Container, 
   Button, 
   Text, 
-  Divider, 
-  Group, 
-  Anchor, 
-  Center, 
-  Box, 
   Alert 
 } from '@mantine/core';
 import { useAuth } from '../../context/AuthContext';
@@ -26,28 +21,20 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Vérification des champs
     if (!username || !password) {
       return;
     }
     
-    // Tentative de connexion
     const success = await login(username, password);
     
     if (success) {
-      // Redirection vers le tableau de bord après connexion réussie
       navigate('/dashboard');
     }
   };
 
   return (
     <Container size={420} my={40}>
-      <Title
-        align="center"
-        sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
-      >
-        Agent Planning
-      </Title>
+      <Title align="center">Agent Planning</Title>
       <Text color="dimmed" size="sm" align="center" mt={5}>
         Application de gestion des plannings d'agents
       </Text>
@@ -56,7 +43,7 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit}>
           <TextInput
             label="Nom d'utilisateur"
-            placeholder="votre-identifiant"
+            placeholder="Votre identifiant"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
