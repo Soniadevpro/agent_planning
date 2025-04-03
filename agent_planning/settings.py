@@ -168,8 +168,35 @@ SIMPLE_JWT = {
 
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.01.:3000",
+# Configuration CORS plus permissive
+CORS_ALLOW_ALL_ORIGINS = True  # À utiliser uniquement en développement
+
+# Configuration plus précise (recommandée pour la production)
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",  # Frontend React
+#     "http://localhost:5173",  # Vite dev server
+# ]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
 CORS_ALLOW_CREDENTIALS = True
+

@@ -6,6 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 // Créer une instance Axios
 const axiosInstance = axios.create({
   baseURL: API_URL,
+  withCredentials: true, // Pour les cookies de session
   headers: {
     'Content-Type': 'application/json',
   },
