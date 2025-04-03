@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Service de base de données PostgreSQL existant
   db:
     image: postgres:14
     environment:
@@ -15,7 +14,6 @@ services:
     restart: always
     command: postgres -c 'max_connections=1000'
 
-  # Service backend Django
   backend:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -30,14 +28,18 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
 
-  # Nouveau service frontend React
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    command: npm run dev -- --host
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - "3000:80"
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://backend:8000/api
     depends_on:
       - backend
 
