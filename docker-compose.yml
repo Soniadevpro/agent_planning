@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  # Service de base de données PostgreSQL existant
+  # Service de base de données PostgreSQL
   db:
     image: postgres:14
     environment:
@@ -30,7 +28,7 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
 
-  # Nouveau service frontend React
+  # Service frontend React
   frontend:
     build: ./frontend
     volumes:

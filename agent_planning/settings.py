@@ -85,8 +85,8 @@ DATABASES = {
         'NAME': 'agent_planning_db',
         'USER': 'agent_user',
         'PASSWORD': 'agent_password',
-        'HOST': '127.0.0.1',  # Changé de 'localhost' à '127.0.0.1'
-        'PORT': '5433',
+        'HOST': 'localhost',  # Changé de 'localhost' à '127.0.0.1'
+        'PORT': '5432',
     }
 }
 
