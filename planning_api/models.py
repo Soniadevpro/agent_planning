@@ -63,7 +63,7 @@ class Shift(models.Model):
         verbose_name_plural = "Créneaux"
     
     def __str__(self):
-        return f"{self.user.username} - {self.start_timestrftime('%d/%m/%Y %H:%M')} à {self.end_time.strftime('%H:%M')}"
+        return f"{self.user.username} - {self.start_time.strftime('%d/%m/%Y %H:%M')} à {self.end_time.strftime('%H:%M')}"
 
 
 
@@ -160,7 +160,7 @@ class Message (models.Model):
         verbose_name_plural = 'Messages'
     
     def __str__(self):
-        return f"Message de {self.sender.username} à {self.recipient.username} - {self.sent_at.strftime('%d/%m/%Y %H:%M')}"
+        return f"Message de {self.sender.username} à {self.recipient.username} - {self.created_at.strftime('%d/%m/%Y %H:%M')}"
     
     
     

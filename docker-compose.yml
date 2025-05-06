@@ -7,7 +7,7 @@ services:
       - POSTGRES_USER=agent_user
       - POSTGRES_PASSWORD=agent_password
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
@@ -25,7 +25,10 @@ services:
       - db
     environment:
       - DEBUG=1
-      - DATABASE_HOST=db
+      - DATABASE_NAME=agent_planning_db
+      - DATABASE_USER=agent_user
+      - DATABASE_PASSWORD=agent_password
+      - DATABASE_HOST=db  # IMPORTANT: utilisez le nom du service Docker
       - DATABASE_PORT=5432
 
   # Service frontend React

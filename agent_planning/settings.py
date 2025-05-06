@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'agent_planning.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'agent_planning_db',
-        'USER': 'agent_user',
-        'PASSWORD': 'agent_password',
-        'HOST': 'localhost',  # Changé de 'localhost' à '127.0.0.1'
-        'PORT': '5432',
+        'NAME': os.environ.get('DATABASE_NAME', 'agent_planning_db'),
+        'USER': os.environ.get('DATABASE_USER', 'agent_user'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'agent_password'),
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DATABASE_PORT', '5432'),
     }
 }
 
