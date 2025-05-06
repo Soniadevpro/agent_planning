@@ -4,9 +4,16 @@ from .models import User
 
 class CustomUserAdmin(UserAdmin):
     model = User
-    list_display = ['username', 'email', 'is_staff', 'is_admin']
+    list_display = ['username', 'email', 'is_staff', 'role']  # Changez 'is_admin' par 'role'
+    
+    # Ajustez les fieldsets pour inclure vos champs personnalisés
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('is_admin', 'employee_id', 'phone_number')}),
+        (None, {'fields': ('role', 'employee_number', 'phone_number', 'department')}),
+    )
+    
+    # Optionnel : ajoutez des champs pour la création d'utilisateur
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {'fields': ('role', 'employee_number', 'phone_number', 'department')}),
     )
 
 admin.site.register(User, CustomUserAdmin)

@@ -4,20 +4,47 @@ from django.utils import timezone
 
 
 
+# planning_api/models.py
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+
 class User(AbstractUser):
     """
-    Extension du modèle utilisateur de Django avec des champs spécifiques
+    Extension du modèle utilisateur spécifique à la RATP
     """
-    is_admin = models.BooleanField(default=False)
-    employee_id = models.CharField(max_length=50, blank=True, null=True)
-    phone_number = models.CharField(max_length=20,blank=True,null=True)
+    ROLE_CHOICES = (
+        ('agent', 'Agent'),
+        ('admin', 'Administrateur'),
+        ('supervisor', 'Superviseur')
+    )
+
+    DEPARTMENT_CHOICES = (
+        ('metro', 'Métro'),
+        ('bus', 'Bus'),
+        ('rer', 'RER'),
+        ('tram', 'Tramway'),
+        ('maintenance', 'Maintenance')
+    )
+
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='agent')
+    department = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES, null=True, blank=True)
+    employee_number = models.CharField(max_length=20, unique=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    hire_date = models.DateField(null=True, blank=True)
     
-    
-    class Meta:
-        verbose_name = "Utilisateur"
-        verbose_name_plural = "Utilisateurs"
+   
+    last_password_change = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        # Automatiquement définir is_staff et is_superuser basé sur le rôle
+        if self.role == 'admin':
+            self.is_staff = True
+            self.is_superuser = True
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.username} ({'Administrateur' if self.is_admin else 'Agent'})"
+        return f"{self.username} ({self.get_role_display()})"
     
     
 class Shift(models.Model):
